@@ -151,22 +151,66 @@ const getUniqActor = (getActorsFilms: any) => {
     },[])
 }
 console.log(getUniqGenre(getActorsFilms));
-// 3. Отсортировать фильмы по рейтингу по убыванию
+// 3. Отсортировать фильмы по рейтингу по убыванию 
+const getRatingUpDown = (filmsArr: Film[]): Film[] => {
+    return [...filmsArr].sort((a, b) => b.imdbRating - a.imdbRating)
+}
+console.log(getRatingUpDown(filmsArr));
+
 // 4. Создать новый массив, где объекты фильмов будут состоять
 // из следующих полей:
 // id, title, released, plot
+
+interface NewFilm {
+    id?: number,
+    title: string,
+    released: string,
+    plot: string
+}
+
+const setNewFilms = (filmsArr: Film[]): NewFilm[] => filmsArr.map(({ id, title, released, plot }) => ({ id, title, released, plot }))
+
+console.log(setNewFilms(filmsArr));
 // 5. Создать функцию, которая бы принимала массив фильмов и
 // число. А результатом этой функции должен быть
 // отфильтрованный массив, с фильмами где число равно году
 // выхода фильма.
+
+const getFilmByYear = (filmsArr: Film[], year: number): Film[] => {
+    return filmsArr.reduce((acc: Film[], cur: Film) => {
+        
+        if(cur.year === year) {
+            acc.push(cur)
+        }
+        return acc
+    }, [])
+}
+
+console.log(getFilmByYear(filmsArr, 2021));
+
 // 6. Создать функцию, которая бы принимала массив фильмов и
 // строку. А результатом этой функции должен быть новый
 // отфильтрованный массив, с фильмами, где строка входит в
 // название фильма.
+const getFilmByTheWordInTitle = (filmsArr: Film[], word: string): Film[] => {
+    return filmsArr.filter(film => {
+        const lowerWord: string = word.toLowerCase()
+        const movieName: string = film.title.toLowerCase()
+        
+        
+        return movieName.includes(lowerWord)
+})
+}
+console.log(getFilmByTheWordInTitle(filmsArr, 'Deathly'));
 // 7. Создать функцию, которая бы принимала массив фильмов и
 // строку. А результатом этой функции должен быть
 // отфильтрованный массив, с фильмами где строка входит в
 // название фильма или в его сюжет.
+
+const getFilmsByTheWordInTitleOrPlot = (filmsArr: Film[], word: string): Film[] => { 
+    return filmsArr.filter(film => film.title.toLowerCase().includes(word.toLowerCase()) || film.plot.toLowerCase().includes(word.toLowerCase()));
+}
+console.log(getFilmsByTheWordInTitleOrPlot(filmsArr, 'with'));
 // 8. Создать функцию, которая бы принимала 3 параметра:
 // 1)массив фильмов , 2) строка(название поля, например 'title') и
 // строку/число(значение поля "Black Widow"). А результатом 
@@ -175,3 +219,8 @@ console.log(getUniqGenre(getActorsFilms));
 // передаем (films, 'title', 'Black Widow') и на выходе получаем
 // фильм с id=1 если передаем (films, 'year', 2011) , то получаем
 // фильм с id=2
+const getMovieOnTheRules = (filmsArr: Film[], property: string, movieProp: string | number): Film[] => {
+    return filmsArr.filter(film => film[property as keyof Film] === movieProp)
+}
+
+console.log(getMovieOnTheRules(filmsArr, 'released', '16 Nov 2001'));

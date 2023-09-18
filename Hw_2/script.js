@@ -1,4 +1,4 @@
-var filmsArr = [
+const filmsArr = [
     {
         id: 1,
         title: 'Black Widow',
@@ -96,15 +96,15 @@ var filmsArr = [
 // C массивом фильмов сделать следующие
 // задачи, используя map/reduce вместо for, forEach:
 // 1. Собрать в массив все жанры фильмов (без повторения);
-var getGenreFilms = function (filmsArr) {
-    return filmsArr.reduce(function (acc, film) {
-        acc.push.apply(acc, film.genre);
+const getGenreFilms = (filmsArr) => {
+    return filmsArr.reduce((acc, film) => {
+        acc.push(...film.genre);
         return acc;
     }, []);
 };
-var getUniqGenre = function (getGenreFilms) {
-    var genreArr = getGenreFilms(filmsArr);
-    return genreArr.reduce(function (acc, val) {
+const getUniqGenre = (getGenreFilms) => {
+    const genreArr = getGenreFilms(filmsArr);
+    return genreArr.reduce((acc, val) => {
         acc.indexOf(val) === -1 && acc.push(val);
         return acc;
     }, []);
@@ -112,36 +112,60 @@ var getUniqGenre = function (getGenreFilms) {
 console.log(getUniqGenre(getGenreFilms));
 // 2. Собрать в массив всех актеров всех фильмов (без
 // повторения)
-var getActorsFilms = function (filmsArr) {
-    return filmsArr.reduce(function (acc, film) {
-        acc.push.apply(acc, film.actors);
+const getActorsFilms = (filmsArr) => {
+    return filmsArr.reduce((acc, film) => {
+        acc.push(...film.actors);
         return acc;
     }, []);
 };
-var getUniqActor = function (getActorsFilms) {
-    var genreArr = getActorsFilms(filmsArr);
-    return genreArr.reduce(function (acc, val) {
+const getUniqActor = (getActorsFilms) => {
+    const genreArr = getActorsFilms(filmsArr);
+    return genreArr.reduce((acc, val) => {
         acc.indexOf(val) === -1 && acc.push(val);
         return acc;
     }, []);
 };
 console.log(getUniqGenre(getActorsFilms));
-// 3. Отсортировать фильмы по рейтингу по убыванию
-// 4. Создать новый массив, где объекты фильмов будут состоять
-// из следующих полей:
-// id, title, released, plot
+// 3. Отсортировать фильмы по рейтингу по убыванию 
+const getRatingUpDown = (filmsArr) => {
+    return [...filmsArr].sort((a, b) => b.imdbRating - a.imdbRating);
+};
+console.log(getRatingUpDown(filmsArr));
+const setNewFilms = (filmsArr) => filmsArr.map(({ id, title, released, plot }) => ({ id, title, released, plot }));
+console.log(setNewFilms(filmsArr));
 // 5. Создать функцию, которая бы принимала массив фильмов и
 // число. А результатом этой функции должен быть
 // отфильтрованный массив, с фильмами где число равно году
 // выхода фильма.
+const getFilmByYear = (filmsArr, year) => {
+    return filmsArr.reduce((acc, cur) => {
+        if (cur.year === year) {
+            acc.push(cur);
+        }
+        return acc;
+    }, []);
+};
+console.log(getFilmByYear(filmsArr, 2021));
 // 6. Создать функцию, которая бы принимала массив фильмов и
 // строку. А результатом этой функции должен быть новый
 // отфильтрованный массив, с фильмами, где строка входит в
 // название фильма.
+const getFilmByTheWordInTitle = (filmsArr, word) => {
+    return filmsArr.filter(film => {
+        const lowerWord = word.toLowerCase();
+        const movieName = film.title.toLowerCase();
+        return movieName.includes(lowerWord);
+    });
+};
+console.log(getFilmByTheWordInTitle(filmsArr, 'Deathly'));
 // 7. Создать функцию, которая бы принимала массив фильмов и
 // строку. А результатом этой функции должен быть
 // отфильтрованный массив, с фильмами где строка входит в
 // название фильма или в его сюжет.
+const getFilmsByTheWordInTitleOrPlot = (filmsArr, word) => {
+    return filmsArr.filter(film => film.title.toLowerCase().includes(word.toLowerCase()) || film.plot.toLowerCase().includes(word.toLowerCase()));
+};
+console.log(getFilmsByTheWordInTitleOrPlot(filmsArr, 'with'));
 // 8. Создать функцию, которая бы принимала 3 параметра:
 // 1)массив фильмов , 2) строка(название поля, например 'title') и
 // строку/число(значение поля "Black Widow"). А результатом 
@@ -150,3 +174,7 @@ console.log(getUniqGenre(getActorsFilms));
 // передаем (films, 'title', 'Black Widow') и на выходе получаем
 // фильм с id=1 если передаем (films, 'year', 2011) , то получаем
 // фильм с id=2
+const getMovieOnTheRules = (filmsArr, property, movieProp) => {
+    return filmsArr.filter(film => film[property] === movieProp);
+};
+console.log(getMovieOnTheRules(filmsArr, 'released', '16 Nov 2001'));
